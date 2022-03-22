@@ -1,4 +1,4 @@
-# BenjaminCodeSnippits
+# CleaningSlugCodeSnippits
 Please do not edit or make use of these scripts without asking for permission as I have spent a lot of time on them and would like to preserve what I have done.
 
 BB_GuardStateMachine.cs is the first introduction for how an AI system can be setup in Unity3D using the Nav Mesh.  I used BB_GuardStateMachine as a referenece to create DirtySlug.cs.  I made the AI move around the screen with Nav Points.
