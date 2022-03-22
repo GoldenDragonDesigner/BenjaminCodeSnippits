@@ -36,7 +36,6 @@ public class BaseEnemy : MonoBehaviour
     [SerializeField]
     protected float ChaseRange;
 
-    //[SerializeField]
     protected float RangeAttackDistanceFromPlayer;
     [Tooltip("Put the amount of time between shots  in the Child script using SetStartTimeBetweenShots(?????)")]
     [SerializeField]
@@ -97,21 +96,6 @@ public class BaseEnemy : MonoBehaviour
 
     protected int AnimationVelocity;
 
-    //protected bool IsEnemyHit;
-    //protected bool IsEnemyMoving;
-    //protected bool IsIdle;
-    //[Tooltip("This is the bool for if the enemy is picking from nav points")]
-    //protected bool pickingFromPoints;
-    //[Tooltip("This is the bool for if the enemy is counting down")]
-    //protected bool countingDown;
-    //[Tooltip("Put the enemy slider health bar here")]
-    //protected Slider EnemySlider;
-    //[Tooltip("Enter the number for when the enemy will runn ")]
-    //[SerializeField]
-    //protected float runAwayDistance;
-    //This is just showing the position of the enemy in vector 3
-    //this shows the distance that the enemy is from the player for shooting
-    //this is the time between shots
     #endregion Variables
 
     #region Awake, Start, and Update
@@ -521,7 +505,7 @@ public class BaseEnemy : MonoBehaviour
     #region EnemyBehaviour
 
     #region EnemyEnum
-    //The state that the enemy is in
+
     protected virtual void EnemyState()
     {
         switch (EnemyStates)
@@ -567,7 +551,6 @@ public class BaseEnemy : MonoBehaviour
 
     #region Idle
 
-    //The Idle state the enemy is in
     protected virtual void Idle()
     {
         IsEnemySpawned = true;
@@ -590,7 +573,7 @@ public class BaseEnemy : MonoBehaviour
 
     #region EnemyShooting
 
-    protected virtual void EnemyShooting()//this function is empty due to be used in other script that inherit it.
+    protected virtual void EnemyShooting()
     {
 
     }
@@ -618,7 +601,6 @@ public class BaseEnemy : MonoBehaviour
 
     #region RangeAttack
 
-    //the function for when the enemy has been hit by the player to fire back at the player and is used in child scripts
     protected virtual void RangeAttack()
     {
 
@@ -641,8 +623,7 @@ public class BaseEnemy : MonoBehaviour
     #endregion RangeAttack
 
     #region Chase
-
-    //The chase state for when the player is within range of the enemy also goes back to the moving state when the player is out of range of the enemy
+    
     protected virtual void Chase()
     {
         if (EnemyNavAgent == null)
@@ -663,7 +644,6 @@ public class BaseEnemy : MonoBehaviour
                     Animator.SetBool(RunAnimationName, true);
                     EnemyNavAgent.speed = ChaseSpeed;
                     Animator.SetFloat(AnimationVelocity, EnemyNavAgent.velocity.magnitude);
-                    //TODO need to see if this is correct or if the EnemyPosition needs to be changed to the player position or the position that the enemy needs to face.
                     FacingTarget(EnemyPosition);
                 }
 
@@ -703,16 +683,13 @@ public class BaseEnemy : MonoBehaviour
 
     #region Moving
 
-    //the moving state the enemy is in
     protected virtual void Moving()
     {
-        //IsEnemyMoving = true;
         DistanceFromPlayer = Vector3.Distance(EnemyTransform.position, PlayerPrefab.transform.position);
 
         if (IsEnemySpawned && !EnemyNavAgent.pathPending && EnemyNavAgent.remainingDistance < .5f && EnemyPrefab != null && DistanceFromPlayer >= SafeDistance)
         {
             EnemyNavAgent.SetDestination(PickNextLocation(WalkRadius));
-            //IsEnemyMoving = true;
             IsEnemyAlerted = false;
             Animator.SetBool(WalkAnimationName, true);
             EnemyNavAgent.speed = WalkSpeed;
@@ -721,18 +698,9 @@ public class BaseEnemy : MonoBehaviour
 
         if (DistanceFromPlayer <= SafeDistance)
         {
-            //IsEnemyMoving = false;
             Animator.SetBool(WalkAnimationName, false);
             EnemyStates = GlobalVariables.AIStates.Chasing;
         }
-        //else if (distanceFromPlayer >= safeDistance)
-        //{
-        //    //IsEnemyAlerted = false;
-        //    //IsEnemyMoving = true;
-        //    //anim.SetBool(walkAnimationName, true);
-        //    //anim.SetFloat(_animationVelocity, enemyNavAgent.velocity.magnitude);
-        //    //EnemyStates = GlobalVariables.AIStates.Moving;
-        //}
     }
 
     #endregion Moving
@@ -778,38 +746,8 @@ public class BaseEnemy : MonoBehaviour
 
     #endregion Attacking
 
-    //#region Evade
-
-    ////TODO if there are problems with the way the enemies move we may need to adjust this function
-    //protected virtual void Evade(string tagName)
-    //{
-    //    Debug.Log("In Evade");
-    //    if (runAwayTime <= 0 && distanceFromPlayer >= runAwayDistance)
-    //    {
-    //        Debug.Log("Far enough from the player to begin moving again");
-    //        runAwayTime = runAwayStartTime;
-    //        //enemyPrefab.gameObject.tag = tagName;
-    //        EnemyStates = GlobalVariables.AIStates.Moving;
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("Nope Nope running away");
-    //        runAwayTime -= Time.deltaTime;
-    //        if (distanceFromPlayer <= runAwayDistance)
-    //        {
-    //            Destination = PlayerPrefab.transform.position;
-    //            enemyNavAgent.destination = -Destination + new Vector3(transform.position.x + 70f, transform.position.y, transform.position.z + 70f);
-    //            enemyNavAgent.speed = chaseSpeed * 2;
-    //            enemyPrefab.gameObject.tag = "Enemy";
-    //        }
-    //    }
-    //}
-
-    //#endregion Evade
-
     #region Death
 
-    //the function for the death of the enemy 
     protected virtual void Death()
     {
         if (CurrentEnemyHealth > 0)
@@ -827,9 +765,7 @@ public class BaseEnemy : MonoBehaviour
     private void KillEnemy()
     {
         SetIsEnemyDead(true);
-        //IsEnemyDead = true;
         EnemyNavAgent.isStopped = true;
-        //IsEnemyDead = true;
         Animator.SetTrigger(DieAnimationName);
         Destroy(gameObject, DeathTime);
         EnemyPrefab = null;
@@ -846,10 +782,8 @@ public class BaseEnemy : MonoBehaviour
         return CurrentEnemyHealth / MaximumEnemyHealth;
     }
 
-    //the function for if the player is damaging the enemy on collision
     public void DoDamage(float amount)
     {
-        //IsEnemyHit = true;
         CurrentEnemyHealth -= amount;
         Animator.SetTrigger(TakeDamageAnimationName);
 
@@ -858,42 +792,14 @@ public class BaseEnemy : MonoBehaviour
         if (CurrentEnemyHealth <= 0)
         {
             Death();
-            //IsEnemyHit = false;
         }
     }
 
     protected IEnumerator SettingTheEnemyHItToFalse()
     {
         yield return new WaitForSeconds(DamageTime);
-        //IsEnemyHit = false;
         StopCoroutine(SettingTheEnemyHItToFalse());
     }
 
     #endregion HealthAndDamage
-
-    //#region OnTriggerEnterFunctions
-
-    //protected virtual void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("GroundingAttack") || other.CompareTag("FrozenAttack"))
-    //    {
-    //        enemyNavAgent.isStopped = true;
-    //    }
-
-    //    if(other.CompareTag("Molten"))
-    //    {
-    //        DoDamage(FindObjectOfType<MoltenEnemyDamage>().initialDamage);
-    //    }
-    //}
-
-    //protected virtual void OnTriggerExit(Collider other)
-    //{
-    //    if (other.CompareTag("GroundingAttack") || other.CompareTag("FrozenAttack"))
-    //    {
-    //        enemyNavAgent.isStopped = false;
-    //    }
-    //}
-
-    //#endregion OnTriggerEnterFunctions
-
 }
