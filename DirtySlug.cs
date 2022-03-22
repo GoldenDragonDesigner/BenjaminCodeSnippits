@@ -20,9 +20,7 @@ public class DirtySlug : FSGDN.StateMachine.MachineBehaviour
     public override void AddStates()
     {
         AddState<Slug_Dirty_State>();
-        AddState<Slug_Idle_State>();
-        //AddState<Slug_Dirty_Finished_State>();
-        
+        AddState<Slug_Idle_State>();      
         SetInitialState<Slug_Dirty_State>();
     }
 
@@ -33,10 +31,6 @@ public class DirtySlug : FSGDN.StateMachine.MachineBehaviour
         if(navIndex >= slugNavPoints.Length)
         {
             navIndex = 0;
-            //if(navIndex == 0)
-            //{
-            //    ChangeState<Slug_Dirty_Finished_State>();
-            //}
         }
     }
 
@@ -51,15 +45,8 @@ public class DirtySlug : FSGDN.StateMachine.MachineBehaviour
         {
             ChangeState<Slug_Idle_State>();
         }
-        //if(other.gameObject.GetComponent<NavPoint>())
-        //{
-        //    ChangeState<Slug_Dirty_Finished_State>();
-        //}
     }
 }
-
-
-
 
 
 public class SlugState : FSGDN.StateMachine.State
@@ -79,15 +66,6 @@ public class Slug_Dirty_State : SlugState
     }
 }
 
-//public class Slug_Dirty_Finished_State : SlugState
-//{
-//    public override void Enter()
-//    {
-//        base.Enter();
-//        SlugStateMachine().DoneTrackingDirt();
-//    }
-//}
-
 public class Slug_Idle_State : SlugState
 {
     float timer = 0;
@@ -103,17 +81,12 @@ public class Slug_Idle_State : SlugState
 
     public override void Execute()
     {
-        //base.Execute();
         timer += Time.deltaTime;
         if(timer >= 2.0f && navNum <= 0)
         {
             machine.ChangeState<Slug_Dirty_State>();
             SlugStateMachine().PickNextNavPoint();
         }
-        //else
-        //{
-        //    machine.ChangeState<Slug_Dirty_Finished_State>();
-        //}
     }
 }
 
