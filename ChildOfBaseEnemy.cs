@@ -3,7 +3,6 @@
  * just call the setters of each of the variables that need to be changed.
  * 
  */
-
 public class ChildOfBaseEnemy : BaseEnemy
 {
     protected override void Start()
