@@ -1,4 +1,4 @@
-
+//this is an inherited class of Base Enemy.
 public class AnotherChildOfBaseEnemy : BaseEnemy
 {
     protected override void Start()
